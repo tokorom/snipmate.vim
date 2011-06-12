@@ -269,3 +269,34 @@ fun! ShowAvailableSnips()
 	return ''
 endf
 " vim:noet:sw=4:ts=4:ft=vim
+
+"" customize
+
+" Reset snippets for filetype.
+fun! ResetSnippets(ft)
+  let ft = a:ft == '' ? '_' : a:ft
+  for dict in [s:snippets, s:multi_snips, g:did_ft]
+    if has_key(dict, ft)
+      unlet dict[ft]
+    endif
+  endfor
+endf
+
+" Reset snippets for all filetypes.
+fun! ResetAllSnippets()
+  let s:snippets = {} | let s:multi_snips = {} | let g:did_ft = {}
+endf
+
+" Reload snippets for filetype.
+fun! ReloadSnippets(ft)
+  let ft = a:ft == '' ? '_' : a:ft
+  call ResetSnippets(ft)
+  call GetSnippets(g:snippets_dir, ft)
+endf
+
+" Reload snippets for all filetypes.
+fun! ReloadAllSnippets()
+  for ft in keys(g:did_ft)
+    call ReloadSnippets(ft)
+  endfor
+endf
